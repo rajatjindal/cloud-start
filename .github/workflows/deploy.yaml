@@ -1,0 +1,31 @@
+name: Deploy to Fermyon Cloud
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+  workflow_dispatch:
+    inputs:
+      correlation_id:
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup spin
+        uses: fermyon/actions/spin/setup@v1
+        with:
+          github_token: ${{ github.token }}
+
+      - name: build and deploy
+        uses: fermyon/actions/spin/deploy@v1
+        id: deploy
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          run_build: false
+
